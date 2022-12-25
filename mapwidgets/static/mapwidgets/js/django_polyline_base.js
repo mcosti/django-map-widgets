@@ -24,7 +24,7 @@
             }
             var mapCenter = mapWidgetOptions.mapCenterLocation ?
             // Set based on your region
-            mapWidgetOptions.mapCenterLocation : [0, 0];
+            mapWidgetOptions.mapCenterLocation: [WIDGET_MAP_CENTER[1], WIDGET_MAP_CENTER[0]];
 
             var map = initMap(mapWidgetOptions.mapElement, {
                 center: new google.maps.LatLng(mapCenter[0], mapCenter[1]),

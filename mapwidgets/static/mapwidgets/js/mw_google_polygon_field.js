@@ -5,8 +5,7 @@
             var mapCenter = [];
             var mapCenter = mapWidgetOptions.mapCenterLocation;
             if (!mapCenter) {
-                // Set based on your region
-                mapCenter = [0, 0];
+                mapCenter = [WIDGET_MAP_CENTER[1], WIDGET_MAP_CENTER[0]];
             }
             this.map = new google.maps.Map(this.mapElement, {
                 center: new google.maps.LatLng(mapCenter[0], mapCenter[1]),
