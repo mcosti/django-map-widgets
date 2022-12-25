@@ -2,7 +2,7 @@ import json
 
 from django import forms
 from django.contrib.gis.forms import BaseGeometryWidget
-from django.contrib.gis.geos import Point
+from django.contrib.gis.geos import Point, Polygon, MultiLineString
 from django.core.exceptions import ImproperlyConfigured
 from django.template.loader import render_to_string
 from django.templatetags.static import static
@@ -402,3 +402,92 @@ class GoogleStaticOverlayMapWidget(GoogleStaticMapWidget):
         context = super(GoogleStaticOverlayMapWidget, self).get_context_data(name, value, attrs)
         context["thumbnail_url"] = self.get_thumbnail_url(value)
         return context
+
+
+class GooglePolygonFieldWidget(BasePointFieldMapWidget):
+    """
+    Widget for drawing and displaying polygon on Google map.
+    """
+    template_name = "mapwidgets/google-polygon-field-widget.html"
+    settings = settings.MAP_WIDGETS['GooglePolygonFieldWidget']
+    settings_namespace = "GooglePolygonFieldWidget"
+
+    @property
+    def media(self):
+        css = {
+            "all": [
+                "mapwidgets/css/map_widgets.css",
+            ]
+        }
+        js = [
+            "https://maps.googleapis.com/maps/api/js?libraries="
+            "drawing&key={}".format(settings.GOOGLE_MAP_API_KEY),
+            "mapwidgets/js/jquery_class.js",
+            "mapwidgets/js/map_helper.js",
+            "mapwidgets/js/django_poly_base.js",
+            "mapwidgets/js/mw_google_polygon_field.js",
+        ]
+        return forms.Media(js=js, css=css)
+
+    def render(self, name, value, attrs=None, renderer=None):
+        if not attrs:
+            attrs = dict()
+
+        field_value = []
+        if isinstance(value, Polygon):
+            field_value = value.geojson
+
+        elif isinstance(value, six.string_types):
+            coordinates = self.deserialize(value)
+            if coordinates:
+                field_value = coordinates.geojson
+
+        extra_attrs = {
+            "options": self.map_options(),
+            "field_value": json.dumps(field_value)
+        }
+        attrs.update(extra_attrs)
+        return super(GooglePolygonFieldWidget, self).render(name, value, attrs,
+                                                            renderer)
+
+
+class GooglePolylineFieldWidget(BasePointFieldMapWidget):
+    """
+    Displaying Polyline on MultiLineField
+    """
+    template_name = "mapwidgets/google-polyline-field-widget.html"
+    settings = settings.MAP_WIDGETS['GooglePolylineFieldWidget']
+    settings_namespace = "GooglePolylineFieldWidget"
+
+    class Media:
+        css = {
+            "all": [
+                "mapwidgets/css/map_widgets.css",
+            ]
+        }
+        js = (
+            "https://maps.googleapis.com/maps/api/js?key={}".format(settings.GOOGLE_MAP_API_KEY),
+            "mapwidgets/js/map_helper.js",
+            "mapwidgets/js/django_polyline_base.js",
+        )
+
+    def render(self, name, value, attrs=None, renderer=None):
+        if not attrs:
+            attrs = dict()
+
+        field_value = []
+        if isinstance(value, MultiLineString):
+            field_value = value.geojson
+
+        elif isinstance(value, six.string_types):
+            coordinates = self.deserialize(value)
+            if coordinates:
+                field_value = coordinates.geojson
+
+        extra_attrs = {
+            "options": self.map_options(),
+            "field_value": json.dumps(field_value)
+        }
+
+        attrs.update(extra_attrs)
+        return super(GooglePolylineFieldWidget, self).render(name, value, attrs)

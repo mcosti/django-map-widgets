@@ -1,0 +1,59 @@
+{% load static i18n %}
+<div class="mw-wrap" id="{{ name }}-mw-wrap">
+    {% block container %}
+    <div id="{{ name }}-mw-message">
+        <h5>Polyline data not found.</h5>
+    </div>
+    <div class="mw-map-wrapper" id="{{ name }}-mw-wrapper">
+        <div class="mw-message">
+            <h5>Polyline data not found.</h5>
+        </div>
+        <div class="mw-loader-overlay hide">
+            <div class="mw-loader"></div>
+        </div>
+        <div id="{{ name }}-map-elem" class="mw-map"></div>
+        <div style="display: none" class="hide">
+            <textarea id="{{ id }}" name="{{ name }}">{{ serialized }}</textarea>
+            {% block extra_input %}
+            {% endblock extra_input %}
+        </div>
+    </div>
+    <div class="animated-loader"></div>
+    {% endblock container %}
+</div>
+
+{% block javascript %}
+<script type="application/javascript">
+    var mapWidgetOptions = {};
+    (function ($) {
+        var mapOptions = JSON.parse("{{ options|escapejs }}");
+        var field_value = JSON.parse("{{ field_value|escapejs }}");
+
+        var wrapElemSelector = "#{{ name }}-mw-wrap";
+        var mapElemID = "{{ name }}-map-elem";
+        var mapWrapperId = "{{ name }}-mw-wrapper";
+        var mapMessageId = "{{ name }}-mw-message";
+        var locationInputID = "#{{ id }}";
+
+        var polyOptions = mapOptions.polyOptions || {
+            strokeWeight: 0,
+            fillOpacity: 0.45,
+            editable: true,
+            draggable: true
+        };
+
+        mapWidgetOptions = {
+            locationInput: $(locationInputID),
+            wrapElemSelector: wrapElemSelector,
+            locationFieldValue: field_value,
+            mapElement: document.getElementById(mapElemID),
+            mapWrapperElem: document.getElementById(mapWrapperId),
+            mapMessageElem: document.getElementById(mapMessageId),
+            mapCenterLocationName: mapOptions.mapCenterLocationName,
+            mapCenterLocation: mapOptions.mapCenterLocation || [12.9538477, 77.3507366],
+            zoom: mapOptions.zoom || 12,
+            polyOptions: polyOptions
+        };
+    })(jQuery || django.jQuery);
+</script>
+{% endblock javascript %}

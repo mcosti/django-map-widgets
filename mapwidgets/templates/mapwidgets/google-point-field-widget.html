@@ -5,7 +5,7 @@
         <div class="mw-header">
             {% block header %}
                 <div class="mw-coordinates-wrap">
-                    <a  class="mw-btn mw-btn-primary mw-btn-coordinates">{% trans "Edit coordinates" %} <i class="icon-down-dir" ></i></a>
+                    <a  class="mw-btn mw-btn-primary mw-btn-coordinates">{% trans "Coordinates" %} <i class="icon-down-dir" ></i></a>
                     <div class="mw-coordinates-overlay hide">
                         <label for="{{ name }}-mw-overlay-latitude">
                             {% trans "Latitude:" %}
@@ -20,9 +20,9 @@
                 </div>
 
                 <a class="mw-btn mw-btn-info mw-btn-my-location" >{% trans "Use My Location" %}</a>
-                <a class="mw-btn mw-btn-warning mw-btn-add-marker" ><i class="icon-location"></i> <span class="point-text">{% trans "Choose point on map" %}</span></a>
+                <a class="mw-btn mw-btn-warning mw-btn-add-marker" ><i class="icon-location"></i></a>
                 <div class="mw-adress-input-wrap pull-right">
-                    <input type="text" class="form-control pull-right" id="{{ name }}-mw-google-address-input" role="presentation" autocomplete="off" placeholder="{% trans 'Find a Location by Address' %}" />
+                    <input type="text" class="form-control pull-right" id="{{ name }}-mw-google-address-input" placeholder="{% trans 'Enter or update the address here' %}"/>
                 </div>
             {% endblock header %}
         </div>
@@ -50,19 +50,24 @@
 
 {% block javascript %}
     <script type="application/javascript">
-        (function($) {
+        (function ($) {
             var mapOptions = JSON.parse("{{ options|escapejs }}");
             var field_value = JSON.parse("{{ field_value|escapejs }}");
 
             var wrapElemSelector = "#{{ name }}-mw-wrap";
             var mapElemID = "{{ name }}-map-elem";
-            var googleAutoInputID = "{{ name }}-mw-google-address-input";
+            var googleAutoInputID = mapOptions.googleAutoInputID || "{{ name }}-mw-google-address-input";
             var locationInputID = "#{{ id }}";
+            var dependantInput = 'id_' + mapOptions.dependantInput;
+            if (mapOptions.googleAutoInputID) {
+                document.getElementById("{{ name }}-mw-google-address-input").style.display = 'none';
+            }
 
-            const mapWidgetOptions = {
+            var mapWidgetOptions = {
                 locationInput: $(locationInputID),
                 wrapElemSelector: wrapElemSelector,
                 locationFieldValue: field_value,
+                dependantInput: document.getElementById(dependantInput),
                 mapElement: document.getElementById(mapElemID),
                 mapCenterLocationName: mapOptions.mapCenterLocationName,
                 mapCenterLocation: mapOptions.mapCenterLocation,
@@ -75,11 +80,9 @@
                 deleteBtn: $(".mw-btn-delete", wrapElemSelector),
                 addMarkerBtn: $(".mw-btn-add-marker", wrapElemSelector),
                 loaderOverlayElem: $(".mw-loader-overlay", wrapElemSelector),
-                scrollWheel: mapOptions.scrollWheel,
                 zoom: mapOptions.zoom,
                 markerFitZoom: mapOptions.markerFitZoom,
                 GooglePlaceAutocompleteOptions: mapOptions.GooglePlaceAutocompleteOptions,
-                streetViewControl: mapOptions.streetViewControl,
                 markerCreateTriggerNameSpace: "google_point_map_widget:marker_create",
                 markerChangeTriggerNameSpace: "google_point_map_widget:marker_change",
                 markerDeleteTriggerNameSpace: "google_point_map_widget:marker_delete",
@@ -89,6 +92,6 @@
             {% block extra_javascript %}
 
             {% endblock %}
-        })(mapWidgets.jQuery);
+        })(jQuery || django.jQuery);
     </script>
 {% endblock javascript %}

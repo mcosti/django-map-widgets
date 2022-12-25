@@ -1,0 +1,68 @@
+{% load static i18n %}
+<div class="mpw-wrap" id="{{ name }}-mw-wrap">
+    {% block container %}
+        <div class="mw-header">
+        {% block header %}
+        <a class="mw-btn mw-btn-info mw-btn-fitzoom">{% trans "Fit Zoom" %}</a>
+        {% endblock header %}
+        </div>
+        <div class="mw-map-wrapper" style="height:500px;">
+            <div class="mw-loader-overlay hide" >
+                <div class="mw-loader"></div>
+            </div>
+            <div id="{{ name }}-map-elem" class="mw-map" style="height: 500px;"></div>
+            <div style="display: none" class="hide">
+                <textarea id="{{ id }}" name="{{ name }}">{{ serialized }}</textarea>
+                {% block extra_input %}
+                {% endblock extra_input %}
+            </div>
+        </div>
+        <div class="animated-loader"></div>
+    {% endblock container %}
+</div>
+
+{% block javascript %}
+    <script type="application/javascript">
+        var mapWidgetOptions = {};
+        (function ($) {
+            var mapOptions = JSON.parse("{{ options|escapejs }}");
+            var field_value = JSON.parse("{{ field_value|escapejs }}");
+            var wrapElemSelector = "#{{ name }}-mw-wrap";
+            var mapElemID = "{{ name }}-map-elem";
+            var locationInputID = "#{{ id }}";
+
+            function getOption(key, defaultVal) {
+              let index = mapOptions.findIndex(i => i[0] == key);
+              if (index !== -1) {
+                return mapOptions[index][1];
+              }
+              return defaultVal;
+            }
+
+            var polyOptions = getOption('polyOptions', {
+                strokeWeight: 0,
+                fillOpacity: 0.45,
+                editable: true,
+                draggable: true
+            });
+            var mapCenterLocationName = getOption('mapCenterLocationName', 'Bengaluru');
+            var mapCenterLocation = getOption('mapCenterLocation', [12.9538477, 77.3507366]);
+            var zoom = getOption('zoom', 12);
+
+            mapWidgetOptions = {
+                locationInput: $(locationInputID),
+                wrapElemSelector: wrapElemSelector,
+                locationFieldValue: field_value,
+                mapElement: document.getElementById(mapElemID),
+                fitZoomBtn: $(".mw-btn-fitzoom", wrapElemSelector),
+                mapCenterLocationName: mapCenterLocationName ,
+                mapCenterLocation: mapCenterLocation,
+                zoom: zoom,
+                polyOptions: polyOptions
+            };
+            new DjangoGooglePolyFieldWidget(mapWidgetOptions);
+            {% block extra_javascript %}
+            {% endblock %}
+        })(jQuery || django.jQuery);
+    </script>
+{% endblock javascript %}
