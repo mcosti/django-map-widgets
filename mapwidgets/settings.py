@@ -16,6 +16,26 @@ DEFAULTS = {
         ("streetViewControl", True),
     ),
 
+    "GooglePolygonFieldWidget": (
+        ("mapCenterLocationName", None),
+        ("mapCenterLocation", TIMEZONE_COORDINATES.get(getattr(django_settings, "TIME_ZONE", "UTC"))),
+        ("zoom", 12),
+        ("scrollWheel", False),
+        ("GooglePlaceAutocompleteOptions", {}),
+        ("markerFitZoom", 14),
+        ("streetViewControl", False),
+    ),
+    
+    "GooglePolylineFieldWidget": (
+        ("mapCenterLocationName", None),
+        ("mapCenterLocation", TIMEZONE_COORDINATES.get(getattr(django_settings, "TIME_ZONE", "UTC"))),
+        ("zoom", 12),
+        ("scrollWheel", False),
+        ("GooglePlaceAutocompleteOptions", {}),
+        ("markerFitZoom", 14),
+        ("streetViewControl", False),
+    ),
+
     "MapboxPointFieldWidget": (
         ("access_token", ""),
         ("markerFitZoom", 14),
