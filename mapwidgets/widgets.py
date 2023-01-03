@@ -1,4 +1,5 @@
 import json
+import six
 
 from django import forms
 from django.contrib.gis.forms import BaseGeometryWidget
