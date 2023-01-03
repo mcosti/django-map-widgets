@@ -409,7 +409,7 @@ class GooglePolygonFieldWidget(BasePointFieldMapWidget):
     Widget for drawing and displaying polygon on Google map.
     """
     template_name = "mapwidgets/google-polygon-field-widget.html"
-    settings = settings.MAP_WIDGETS['GooglePolygonFieldWidget']
+    settings = mw_settings.MAP_WIDGETS['GooglePolygonFieldWidget']
     settings_namespace = "GooglePolygonFieldWidget"
 
     @property
