@@ -409,7 +409,7 @@ class GooglePolygonFieldWidget(BasePointFieldMapWidget):
     Widget for drawing and displaying polygon on Google map.
     """
     template_name = "mapwidgets/google-polygon-field-widget.html"
-    settings = mw_settings.MAP_WIDGETS['GooglePolygonFieldWidget']
+    settings = mw_settings.GooglePolygonFieldWidget
     settings_namespace = "GooglePolygonFieldWidget"
 
     @property
@@ -456,7 +456,7 @@ class GooglePolylineFieldWidget(BasePointFieldMapWidget):
     Displaying Polyline on MultiLineField
     """
     template_name = "mapwidgets/google-polyline-field-widget.html"
-    settings = mw_settings.MAP_WIDGETS['GooglePolylineFieldWidget']
+    settings = mw_settings.GooglePolylineFieldWidget
     settings_namespace = "GooglePolylineFieldWidget"
 
     class Media:
