@@ -456,7 +456,7 @@ class GooglePolylineFieldWidget(BasePointFieldMapWidget):
     Displaying Polyline on MultiLineField
     """
     template_name = "mapwidgets/google-polyline-field-widget.html"
-    settings = settings.MAP_WIDGETS['GooglePolylineFieldWidget']
+    settings = mw_settings.MAP_WIDGETS['GooglePolylineFieldWidget']
     settings_namespace = "GooglePolylineFieldWidget"
 
     class Media:
