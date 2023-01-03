@@ -32,10 +32,9 @@
             var locationInputID = "#{{ id }}";
 
             function getOption(key, defaultVal) {
-                console.log(mapOptions)
-              let index = mapOptions.findIndex(i => i[0] == key);
-              if (index !== -1) {
-                return mapOptions[index][1];
+              let value = mapOptions[key]
+              if (value !== undefined) {
+                return value
               }
               return defaultVal;
             }
