@@ -421,7 +421,7 @@ class GooglePolygonFieldWidget(BasePointFieldMapWidget):
         }
         js = [
             "https://maps.googleapis.com/maps/api/js?libraries="
-            "drawing&key={}".format(settings.GOOGLE_MAP_API_KEY),
+            "drawing&key={}".format(mw_settings.GOOGLE_MAP_API_KEY),
             "mapwidgets/js/jquery_class.js",
             "mapwidgets/js/map_helper.js",
             "mapwidgets/js/django_poly_base.js",
@@ -466,7 +466,7 @@ class GooglePolylineFieldWidget(BasePointFieldMapWidget):
             ]
         }
         js = (
-            "https://maps.googleapis.com/maps/api/js?key={}".format(settings.GOOGLE_MAP_API_KEY),
+            "https://maps.googleapis.com/maps/api/js?key={}".format(mw_settings.GOOGLE_MAP_API_KEY),
             "mapwidgets/js/map_helper.js",
             "mapwidgets/js/django_polyline_base.js",
         )
